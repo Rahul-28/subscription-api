@@ -1,8 +1,7 @@
 import jwt from "jsonwebtoken";
-
 import { JWT_SECRET } from "../config/env.js";
-
 import User from "../models/user.model.js";
+import { blacklistedTokens } from "./auth.controller.js";
 
 const authorize = async (req, res, next) => {
   // Check if the user is logged in and authorized to access the resource
@@ -38,4 +37,21 @@ const authorize = async (req, res, next) => {
   }
 };
 
-export default authorize;
+export const checkBlacklistedToken = (req, res, next) => {
+  try {
+    const token = req.headers.authorization?.split(" ")[1];
+
+    if (blacklistedTokens.has(token)) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid token, please sign in again",
+      });
+    }
+
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
+
+export default { authorize, checkBlacklistedToken };
