@@ -3,7 +3,7 @@ import { JWT_SECRET } from "../config/env.js";
 import User from "../models/user.model.js";
 import { blacklistedTokens } from "./auth.controller.js";
 
-const authorize = async (req, res, next) => {
+export const authorize = async (req, res, next) => {
   // Check if the user is logged in and authorized to access the resource
   try {
     let token;
@@ -53,5 +53,3 @@ export const checkBlacklistedToken = (req, res, next) => {
     next(error);
   }
 };
-
-export default { authorize, checkBlacklistedToken };
